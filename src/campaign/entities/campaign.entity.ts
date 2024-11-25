@@ -1,0 +1,25 @@
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+
+@Entity()
+export class Campaign {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  difficulty: number;
+
+  @Column()
+  rewardType: string;
+
+  @Column()
+  rewardAmount: string;
+
+  @Column()
+  sort: number;
+}
