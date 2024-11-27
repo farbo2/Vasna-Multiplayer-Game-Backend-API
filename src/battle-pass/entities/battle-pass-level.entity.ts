@@ -1,12 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { BattlePass } from './battle-pass.entity';
-import { BattlePassInventory } from './battle-pass-inventory.entity';
 
 @Entity()
 export class BattlePassLevel {
@@ -17,7 +10,7 @@ export class BattlePassLevel {
   levelNumber: number;
 
   @Column()
-  xpRequired: number;
+  xpRequiredForComplete: number;
 
   @Column()
   rewardType: string;

@@ -16,7 +16,10 @@ export class BattlePass {
   endDate: Date;
 
   @Column()
-  status: string;
+  sort: number;
+
+  @Column()
+  status: string; //Expired-Progressing-InQueue
 
   @OneToMany(
     () => BattlePassLevel,

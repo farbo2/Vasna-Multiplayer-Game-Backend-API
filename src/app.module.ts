@@ -23,8 +23,7 @@ import { BattlePassProgress } from './battle-pass/entities/battle-pass-progress.
 import { BattlePassInventory } from './battle-pass/entities/battle-pass-inventory.entity';
 import { Campaign } from './campaign/entities/campaign.entity';
 import { UserCampaign } from './campaign/entities/user-campaign.entity';
-import { ClanQuest } from './clan-quests/entities/clan-quest.entity';
-import { ClanQuestHistory } from './clan-quests/entities/clan-quest-history.entity';
+import { CurrentClanQuest } from './clan-quests/entities/current-clan-quest.entity';
 import { ClanQuestContribution } from './clan-quests/entities/clan-quest-contribution.entity';
 import { Friend } from './friends/entities/friend.entity';
 import { Kill } from './kills/entities/kill.entity';
@@ -38,6 +37,7 @@ import { ProductCategory } from './products/entities/product-category.entity';
 import { UserPurchase } from './products/entities/user-purchase.entity';
 import { Quest } from './quests/entities/quest.entity';
 import { UserQuest } from './quests/entities/user-quest.entity';
+import { ClanQuest } from './clan-quests/entities/clan-quest.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -55,9 +55,8 @@ import { UserQuest } from './quests/entities/user-quest.entity';
         Campaign,
         UserCampaign,
         ClanQuest,
+        CurrentClanQuest,
         ClanQuestContribution,
-        ClanQuestHistory,
-        ClanQuestHistory,
         Friend,
         Kill,
         Match,

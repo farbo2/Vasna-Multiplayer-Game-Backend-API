@@ -5,7 +5,6 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
-import { Card } from './card.entity';
 import { UserUnlockedCard } from './user-unlocked-card.entity';
 
 @Entity()

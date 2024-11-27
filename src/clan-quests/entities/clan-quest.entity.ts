@@ -6,9 +6,6 @@ export class ClanQuest {
   id: number;
 
   @Column()
-  clan_id: string;
-
-  @Column()
   title: string;
 
   @Column()
@@ -18,12 +15,6 @@ export class ClanQuest {
   targetPoint: number;
 
   @Column()
-  startDate: Date;
-
-  @Column()
-  endDate: number;
-
-  @Column()
   rewardType: string;
 
   @Column()
@@ -31,4 +22,7 @@ export class ClanQuest {
 
   @Column()
   type: string;
+
+  @Column()
+  sort: number;
 }
