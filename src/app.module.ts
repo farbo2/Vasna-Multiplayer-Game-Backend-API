@@ -23,6 +23,21 @@ import { BattlePassProgress } from './battle-pass/entities/battle-pass-progress.
 import { BattlePassInventory } from './battle-pass/entities/battle-pass-inventory.entity';
 import { Campaign } from './campaign/entities/campaign.entity';
 import { UserCampaign } from './campaign/entities/user-campaign.entity';
+import { ClanQuest } from './clan-quests/entities/clan-quest.entity';
+import { ClanQuestHistory } from './clan-quests/entities/clan-quest-history.entity';
+import { ClanQuestContribution } from './clan-quests/entities/clan-quest-contribution.entity';
+import { Friend } from './friends/entities/friend.entity';
+import { Kill } from './kills/entities/kill.entity';
+import { Match } from './matches/entities/match.entity';
+import { Move } from './moves/entities/move.entity';
+import { News } from './news/entities/news.entity';
+import { NewsStatus } from './news/entities/new-status.entity';
+import { PrivateMessage } from './private-messages/entities/private-message.entity';
+import { Product } from './products/entities/Product.entity';
+import { ProductCategory } from './products/entities/product-category.entity';
+import { UserPurchase } from './products/entities/user-purchase.entity';
+import { Quest } from './quests/entities/quest.entity';
+import { UserQuest } from './quests/entities/user-quest.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -39,6 +54,23 @@ import { UserCampaign } from './campaign/entities/user-campaign.entity';
         BattlePassInventory,
         Campaign,
         UserCampaign,
+        ClanQuest,
+        ClanQuestContribution,
+        ClanQuestHistory,
+        ClanQuestHistory,
+        Friend,
+        Kill,
+        Match,
+        Move,
+        News,
+        NewsStatus,
+        Notification,
+        PrivateMessage,
+        Product,
+        ProductCategory,
+        UserPurchase,
+        Quest,
+        UserQuest,
       ],
       synchronize: true,
     }),

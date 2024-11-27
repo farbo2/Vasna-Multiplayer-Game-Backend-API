@@ -1,5 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { Card } from './card.entity';
+import { UserUnlockedCard } from './user-unlocked-card.entity';
 
 @Entity()
 export class UserSelectedCard {
@@ -9,12 +16,9 @@ export class UserSelectedCard {
   @Column()
   userId: number;
 
-  @ManyToOne(() => Card)
-  card: Card;
+  @OneToOne(() => UserUnlockedCard)
+  card: UserUnlockedCard;
 
   @Column()
-  level: number;
-
-  @Column()
-  unlockedAt: number;
+  selectedAt: Date;
 }
