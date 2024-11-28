@@ -28,4 +28,7 @@ export class Quest {
 
   @Column()
   endDate: Date;
+
+  @Column()
+  isActive: boolean;
 }
