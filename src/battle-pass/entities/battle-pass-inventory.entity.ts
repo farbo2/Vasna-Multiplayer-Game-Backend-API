@@ -6,10 +6,7 @@ export class BattlePassInventory {
   id: number;
 
   @Column()
-  userId: number;
-
-  @Column()
-  battlePassId: string;
+  battlePassId: number;
 
   @Column()
   levelId: number;

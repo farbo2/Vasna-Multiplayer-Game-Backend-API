@@ -4,70 +4,160 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
+import { BattlePassService } from './battle-pass.service';
+import { createBattlePassDto } from './dtos/create-battle-pass.dto';
+import { AddBattlePassLevelsDto } from './dtos/add-battle-pass-levels.dto';
+import { UpdateBattlePassDto } from './dtos/update-battle-pass.dto';
+import { UpdateBattlePassLevelDto } from './dtos/update-battle-pass-level.dto';
+import { CreateBattlePassInventoryDto } from './dtos/create-battle-pass-inventory.dto';
+import { UpdateBattlePassInventoryDto } from './dtos/update-battle-pass-inventory.dto';
+import { progressActiveBattlePass } from './dtos/progress-active-battle-pass.dto';
 
 @Controller('battle-pass')
 export class BattlePassController {
+  constructor(private battlePassService: BattlePassService) {}
   //BATTLE PASS HANDLERS
   @Get()
-  getAllBattlePasses() {}
-
-  @Get('/:id')
-  getBattlePassById(@Param('id') id: number) {}
-
-  @Post()
-  createBattlePass(@Body() body: any) {
-    //TODO: and CreateBattlePassProgress For Every Single User
+  getAllBattlePasses() {
+    return this.battlePassService.findAllBattlePassWithLevels();
   }
 
-  @Patch('/:id')
-  updateBattlePass(@Param('id') id: number, @Body() body: any) {}
+  @Get('/:id')
+  getBattlePassById(@Param('id') id: string) {
+    var IntId = parseInt(id);
+    return this.battlePassService.findBattlePassById(IntId);
+  }
+
+  @Post()
+  async createBattlePass(@Body() body: createBattlePassDto) {
+    return this.battlePassService.createBattlePass(body);
+  }
+
+  @Put('/:id')
+  updateBattlePass(@Param('id') id: string, @Body() body: UpdateBattlePassDto) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    return this.battlePassService.updateBattlePass(numericId, body);
+  }
 
   @Delete('/:id')
-  removeBattlePassById(@Param('id') id: number) {}
+  async removeBattlePassById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
+    await this.battlePassService.deleteBattlePassById(id);
+    return {
+      message: `BattlePass with ID ${id} has been deleted successfully.`,
+    };
+  }
 
   // BATTLE PASS LEVEL HANDLER
   @Get('/level/:id')
-  BattlePassLevelById(@Param('id') id: number) {}
+  findBattlePassLevelById(@Param('id') id: string) {
+    var IntId = parseInt(id);
+    return this.battlePassService.findBattlePassLevelById(IntId);
+  }
 
-  @Post('/level')
-  createBattlePassLevel(@Body() body: any) {}
+  @Post(':battlePassId/levels')
+  async addLevelsToBattlePass(
+    @Param('battlePassId', ParseIntPipe) battlePassId: number,
+    @Body() addBattlePassLevelsDto: AddBattlePassLevelsDto,
+  ) {
+    return this.battlePassService.addLevelsToBattlePass(
+      battlePassId,
+      addBattlePassLevelsDto,
+    );
+  }
 
-  @Patch('/level/:id')
-  updateBattlePassLevelById(@Param('id') id: number, @Body() body: any) {}
+  @Put('/level/:id')
+  updateBattlePassLevel(
+    @Param('id') id: string,
+    @Body() body: UpdateBattlePassLevelDto,
+  ) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    return this.battlePassService.updateBattlePassLevel(numericId, body);
+  }
 
   @Delete('/level/:id')
-  removeBattlePassLevelById(@Param('id') id: number, @Body() body: any) {}
+  async removeBattlePassLevelById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
+    await this.battlePassService.deleteBattlePassLevelById(id);
+    return {
+      message: `BattlePassLevel with ID ${id} has been deleted successfully.`,
+    };
+  }
 
   // BATTLE PASS INVENTORY
   @Get('/inventory/:id')
-  getBattlePassLevelInventoryById(@Param('id') id: number) {}
+  getBattlePassLevelInventoryById(@Param('id') id: string) {
+    var IntId = parseInt(id);
+    return this.battlePassService.findBattlePassInventoryById(IntId);
+  }
 
   @Get('/inventory/level/:id')
-  getBattlePassLevelInventoryByLevelId(@Param('id') id: number) {}
+  getBattlePassInventoriesByLevelId(@Param('id') id: string) {
+    var IntId = parseInt(id);
+    return this.battlePassService.findBattlePassInventoriesByLevelId(IntId);
+  }
+  @Post()
+  async createBattlePassInventoryWithLevelId(
+    @Body() body: CreateBattlePassInventoryDto,
+  ) {
+    return this.battlePassService.createBattlePassInventory(body);
+  }
 
   @Patch('/inventory/:id')
   updateBattlePassLevelInventoryById(
-    @Param('id') id: number,
-    @Body() body: any,
-  ) {}
+    @Param('id') id: string,
+    @Body() body: UpdateBattlePassInventoryDto,
+  ) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    return this.battlePassService.updateBattlePassInventory(numericId, body);
+  }
 
   @Delete('/inventory/:id')
-  removeBattlePassLevelInventoryById(@Param('id') id: number) {}
+  async removeBattlePassInventoryById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string }> {
+    await this.battlePassService.deleteBattlePassInventoryById(id);
+    return {
+      message: `BattlePassLevel Inventory with ID ${id} has been deleted successfully.`,
+    };
+  }
 
   // BATTLE PASS PROGRESS
   @Get('/progress/:userid')
-  getAllBattlePassProgressByUserId(@Param('userid') userId: number) {}
+  getAllBattlePassProgressByUserId(@Param('userid') userId: string) {
+    var IntId = parseInt(userId);
+    return this.battlePassService.findBattlePassProgressByUserId(IntId);
+  }
 
   @Get('/progress/current/:userid')
-  getCurrentActiveBattlePassProgressByUserId(@Param('userid') userId: number) {}
+  getCurrentActiveBattlePassProgressByUserId(@Param('userid') userId: string) {
+    var IntId = parseInt(userId);
+    return this.battlePassService.findCurrentActiveBattlePassProgressByUserId(
+      IntId,
+    );
+  }
 
   @Patch('/progress')
-  progressCurrentActiveBattlePass(@Body() body: any) {
-    //TODO: FindActive BattlePass
-    //TODO: Find UserProgress And Update XpCollected and "Level" Based On That and "Level Xp Required To Complete"
-    //TODO: Check if Level Completed Get Inventory And Add to User Inventory
+  progressCurrentActiveBattlePass(@Body() body: progressActiveBattlePass) {
+    this.battlePassService.progressCurrentActiveBattlePass(
+      body.userId,
+      body.xpToAdd,
+    );
   }
 }

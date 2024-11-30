@@ -7,7 +7,7 @@ export class BattlePass {
   id: number;
 
   @Column()
-  name: Date;
+  name: string;
 
   @Column()
   startDate: Date;
@@ -24,6 +24,7 @@ export class BattlePass {
   @OneToMany(
     () => BattlePassLevel,
     (battlePassLevel) => battlePassLevel.battlePass,
+    { cascade: true },
   )
   levels: BattlePassLevel[];
 }

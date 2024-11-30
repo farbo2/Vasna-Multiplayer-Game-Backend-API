@@ -12,12 +12,6 @@ export class BattlePassLevel {
   @Column()
   xpRequiredForComplete: number;
 
-  @Column()
-  rewardType: string;
-
-  @Column()
-  rewardAmount: number;
-
   @ManyToOne(() => BattlePass, (battlePass) => battlePass.levels)
-  battlePass: string;
+  battlePass: BattlePass;
 }

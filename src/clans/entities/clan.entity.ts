@@ -25,7 +25,9 @@ export class Clan {
   @Column()
   logo: string;
 
-  @OneToMany(() => ClanMember, (clanMember) => clanMember.clan)
+  @OneToMany(() => ClanMember, (clanMember) => clanMember.clan, {
+    cascade: true,
+  })
   members: ClanMember[];
 
   @Column()
