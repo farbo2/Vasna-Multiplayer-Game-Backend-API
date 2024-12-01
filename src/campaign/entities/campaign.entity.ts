@@ -18,7 +18,7 @@ export class Campaign {
   rewardType: string;
 
   @Column()
-  rewardAmount: string;
+  rewardAmount: number;
 
   @Column()
   sort: number;
