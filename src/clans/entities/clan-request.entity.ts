@@ -12,10 +12,10 @@ export class ClanRequest {
   @ManyToOne(() => User)
   player: User;
 
-  @Column()
-  status: string;
+  @Column({ default: 'Waiting' })
+  status: string; //Waiting,Accepted,Declined
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   sentAt: Date;
 
   @Column()

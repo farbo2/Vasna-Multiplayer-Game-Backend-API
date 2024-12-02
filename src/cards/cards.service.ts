@@ -35,15 +35,10 @@ export class CardsService {
         return [];
       }
 
-      this.logger.log(
-        `Successfully fetched ${cards.length} BattlePass records`,
-      );
+      this.logger.log(`Successfully fetched ${cards.length} Card records`);
       return cards;
     } catch (error) {
-      this.logger.error(
-        'Error occurred while fetching Cards with levels',
-        error.stack,
-      );
+      this.logger.error('Error occurred while fetching Cards', error.stack);
       throw new InternalServerErrorException(
         'An error occurred while retrieving Cards data. Please try again later.',
       );

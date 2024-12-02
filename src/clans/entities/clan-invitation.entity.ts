@@ -18,7 +18,7 @@ export class ClanInvitation {
   @Column()
   status: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   sentAt: Date;
 
   @Column()

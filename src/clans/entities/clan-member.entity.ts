@@ -15,6 +15,6 @@ export class ClanMember {
   @Column()
   role: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   joinedAt: Date;
 }

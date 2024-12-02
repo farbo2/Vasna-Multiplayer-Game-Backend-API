@@ -1,5 +1,5 @@
-import { Quest } from 'src/quests/entities/quest.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { ClanQuest } from './clan-quest.entity';
 
 @Entity()
 export class CurrentClanQuest {
@@ -9,8 +9,8 @@ export class CurrentClanQuest {
   @Column()
   clan_id: string;
 
-  @ManyToOne(() => Quest)
-  quest: Quest;
+  @ManyToOne(() => ClanQuest)
+  quest: ClanQuest;
 
   @Column()
   currentPoint: number;

@@ -73,6 +73,9 @@ export class CardsController {
   @Delete('/unselect/:id')
   unselectCardById(@Param('id') id: string) {
     const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
     return this.cardsService.unselectUnlockedCardById(numericId);
   }
 
@@ -88,7 +91,11 @@ export class CardsController {
   }
 
   @Patch('/levelup/:id')
-  levelUpUnblockedCard(@Param('id') id: number) {
-    return this.cardsService.levelUpUnlockedCard(id);
+  levelUpUnblockedCard(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    return this.cardsService.levelUpUnlockedCard(numericId);
   }
 }

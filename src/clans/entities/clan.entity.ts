@@ -30,6 +30,6 @@ export class Clan {
   })
   members: ClanMember[];
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }
