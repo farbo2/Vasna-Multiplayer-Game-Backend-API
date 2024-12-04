@@ -61,9 +61,10 @@ export class ClansService {
     if (!leader) {
       throw new Error('Leader not found');
     }
-
     const clan = this.clansRepo.create(data);
+    clan.leader = leader;
 
+    // TODO: ADD CURRENT CLAN QUEST FOR CLAN
     return this.clansRepo.save(clan);
   }
 
@@ -77,6 +78,7 @@ export class ClansService {
     if (!clan) {
       throw new Error('Clan not found');
     }
+    //TODO : DELETE CURRENT CLAN QUEST
     // remove from database
     await this.clansRepo.remove(clan);
 
@@ -123,7 +125,7 @@ export class ClansService {
       playerId: data.playerId,
       role: data.role,
     });
-
+    //TODO: ADD CLAN QUEST CONTRIBUTION
     clan.members.push(clanMember);
     await this.clansRepo.save(clan);
 
@@ -148,7 +150,7 @@ export class ClansService {
     if (!member) {
       throw new Error('Member not found in this clan');
     }
-
+    // TODO: DELETE CLAN QUEST CONTRIBUTION
     // remove member from database
     await this.clanMemberRepo.remove(member);
 

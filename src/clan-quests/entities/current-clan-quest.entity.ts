@@ -7,10 +7,10 @@ export class CurrentClanQuest {
   id: number;
 
   @Column()
-  clan_id: string;
+  clan_id: number;
 
   @ManyToOne(() => ClanQuest)
-  quest: ClanQuest;
+  clanQuest: ClanQuest;
 
   @Column()
   currentPoint: number;
@@ -19,7 +19,7 @@ export class CurrentClanQuest {
   startDate: Date;
 
   @Column()
-  endDate: number;
+  endDate: Date;
 
   @Column()
   isExpired: boolean;

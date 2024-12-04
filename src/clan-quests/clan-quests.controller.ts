@@ -7,29 +7,89 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ClanQuestsService } from './clan-quests.service';
+import { updateClanQuestDto } from './dtos/update-clan-quest.dto';
+import { createClanQuestDto } from './dtos/create-clan-quest.dto';
+import { updateCurrentClanQuestDto } from './dtos/update-current-clan-quest.dto';
 
 @Controller('clan-quests')
 export class ClanQuestsController {
+  constructor(private clanQuestService: ClanQuestsService) {}
   //CLAN QUEST HANDLERS
-  @Get('/:id')
-  getClanQuestById(@Param('id') id: number) {}
 
-  @Patch('/:id')
-  updateClanQuest(@Param('id') id: number, @Body() body: any) {}
+  //ADMINSTRATIN SECTION
 
-  @Delete('/:id')
-  removeClanQuest(@Param('id') id: number) {}
-
-  @Post()
-  createClanQuest(@Body() body: any) {
-    //TODO: Add ClanQuestHistory and ClanQuestProgress for every single ClanQuest by 0 progress point
+  @Get()
+  getAllClanQuests() {
+    this.clanQuestService.findAllClanQuests();
   }
 
-  @Get('/clan/:clanid')
-  getAllClanQuestByClanId(@Param('clanid') id: number) {}
+  @Get('/:id')
+  getClanQuestById(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.findClanQuestById(numericId);
+  }
+
+  @Patch('/:id')
+  updateClanQuestById(
+    @Param('id') id: string,
+    @Body() body: updateClanQuestDto,
+  ) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.updateClanQuest(numericId, body);
+  }
+
+  @Delete('/:id')
+  removeClanQuest(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.deleteClanQuest(numericId);
+  }
+
+  @Post()
+  createClanQuest(@Body() body: createClanQuestDto) {
+    this.clanQuestService.createClanQuest(body);
+  }
+
+  // CLAN LEADER AREA
+  @Get('/clan/deactive/:clanid')
+  getAllPrevCurrentClanQuestByClanId(@Param('clanid') clanId: string) {
+    const numericId = parseInt(clanId, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.findAllDectiveClanQuestByClanId(numericId);
+  }
 
   @Get('/clan/active/:clanid')
-  getActiveClanQuestByClanId(@Param('clanid') id: number) {}
+  getActiveCurrentClanQuestByClanId(@Param('clanid') clanId: string) {
+    const numericId = parseInt(clanId, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.findActiveClanQuestByClanId(numericId);
+  }
+
+  @Patch('/:id')
+  updateActiveCurrentClanQuestById(
+    @Param('id') clanId: string,
+    @Body() body: updateCurrentClanQuestDto,
+  ) {
+    const numericId = parseInt(clanId, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.clanQuestService.updateCurrentActiveClanQuest(numericId, body);
+  }
+  //CLAN MEMBER AREA
 
   //Clan Contribution
   @Patch('/clan/contrubution/:clanid')
@@ -39,3 +99,5 @@ export class ClanQuestsController {
     //TODO: Check For Quest Status After Contribution
   }
 }
+
+// STRATEGY : بايد با ساخت هر کلن یک کارنت کلن کوعست با وضعيت اكتيو ساخته بشه که وضعیت کوعست فعلی رو نگه میداره. به ازای هر کلن یکی هست و با تموم شدن کوعست دوباره ریفرش میشه. و کارنت کلن کوعست انجام شده یا منقضی شده تبدیل به کلن کوعست دی اکتیو میشه و دوباره براش یک ریکورد ایجاد میشه با وضعیت دی اکتیو..
