@@ -1,16 +1,36 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { createMatchDto } from './dtos/create-match.dto';
+import { updateMatchDto } from './dtos/update-match.dto';
+import { MatchesService } from './matches.service';
 
 @Controller('matches')
 export class MatchesController {
+  constructor(private matchService: MatchesService) {}
   @Post()
-  createMatch(@Body() body: any) {}
+  createMatch(@Body() body: createMatchDto) {
+    this.matchService.createMatch(body);
+  }
 
-  @Get()
-  getMatchById(@Param('id') id: number) {}
+  @Get(':id')
+  getMatchById(@Param('id') id: number) {
+    this.matchService.findMatchById(id);
+  }
 
-  @Patch()
-  updateMatchById(@Param('id') id: number) {}
+  @Patch(':id')
+  updateMatchById(@Param('id') id: string, @Body() body: updateMatchDto) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.matchService.updateMatch(numericId, body);
+  }
 
   @Get('/winner/:userId')
-  getMatchWinsByUserId(@Param('userId') id: number, @Body() body: any) {}
+  getMatchWinsByUserId(@Param('userId') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.matchService.findAllWinsMatchByUserId(numericId);
+  }
 }

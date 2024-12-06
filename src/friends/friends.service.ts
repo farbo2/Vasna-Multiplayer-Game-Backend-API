@@ -38,7 +38,7 @@ export class FriendsService {
 
   async findAllFriendsByUserId(id: number) {
     try {
-      this.logger.log('Attempting to fetch a Clan Quest by ID');
+      this.logger.log('Attempting to fetch Friends by User ID');
       const friend = await this.friendRepo.findAllFriendsByUserId(id);
       if (!friend) {
         this.logger.warn('No Friend record found in the database');

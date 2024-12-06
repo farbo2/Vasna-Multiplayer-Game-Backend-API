@@ -15,7 +15,7 @@ export class Move {
   moveType: string;
 
   @Column()
-  moveDate: string;
+  moveDate: Date;
 
   @Column()
   timestamp: Date;

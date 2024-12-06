@@ -7,32 +7,79 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { updateNewsDto } from './dtos/update-news.dto';
+import { createNewsStatusDto } from './dtos/create-news-status.dto';
+import { updateNewsStatusDto } from './dtos/update-news-status.dto';
+import { createNewsDto } from './dtos/create-news.dto';
+import { NewsService } from './news.service';
 
 @Controller('news')
 export class NewsController {
+  constructor(private newsService: NewsService) {}
   // NEWS HANDLERS
   @Get()
-  getAllNews() {}
+  getAllNews() {
+    this.newsService.findAllNews();
+  }
 
   @Get('/:id')
-  getNewsById(@Param('id') id: number) {}
+  getNewsById(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.newsService.findNewsById(numericId);
+  }
 
   @Get('/type/:type')
-  getNewsByType(@Param('type') type: string) {}
+  getNewsByType(@Param('type') type: string) {
+    this.newsService.findAllNewsByType(type);
+  }
 
   @Post()
-  createNews(@Body() body: any) {}
+  createNews(@Body() body: createNewsDto) {
+    this.newsService.createNews(body);
+  }
 
   @Patch('/:id')
-  updateNews(@Param('id') id: number, @Body() body: any) {}
+  updateNews(@Param('id') id: string, @Body() body: updateNewsDto) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.newsService.updateNews(numericId, body);
+  }
 
   @Delete('/:id')
-  deleteNews(@Param('id') id: number) {}
+  deleteNews(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.newsService.deleteNews(numericId);
+  }
 
   //NEWS STATUS
+  @Get('status/:id')
+  getNewsStatusById(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.newsService.findNewsStatusById(numericId);
+  }
+
   @Post('/status')
-  createNewsStatus(@Body() body: any) {}
+  createNewsStatus(@Body() body: createNewsStatusDto) {
+    this.newsService.createNewsStatus(body);
+  }
 
   @Patch('/status/:id')
-  updateNewsStatus(@Param('id') id: number, @Body() body: any) {}
+  updateNewsStatus(@Param('id') id: string, @Body() body: updateNewsStatusDto) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    this.newsService.updateNewsStatus(numericId, body);
+  }
 }

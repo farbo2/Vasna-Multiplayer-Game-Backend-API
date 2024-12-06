@@ -20,6 +20,6 @@ export class Kill {
   @Column()
   killType: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   killedAt: Date;
 }
