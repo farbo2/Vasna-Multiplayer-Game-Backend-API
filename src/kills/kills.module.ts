@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { KillsService } from './kills.service';
 import { KillsController } from './kills.controller';
+import { KillsRepository } from './kills.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Kill } from './entities/kill.entity';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
-  providers: [KillsService],
-  controllers: [KillsController]
+  imports: [TypeOrmModule.forFeature([Kill])],
+  providers: [KillsService, KillsRepository, JwtAuthGuard],
+  controllers: [KillsController],
 })
 export class KillsModule {}

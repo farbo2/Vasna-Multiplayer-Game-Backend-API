@@ -11,12 +11,12 @@ export class UserQuest {
   @Column()
   questId: number;
 
-  @Column()
+  @Column({ default: 'Processing' })
   status: string;
 
   @Column()
   currentPoint: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastUpdated: Date;
 }

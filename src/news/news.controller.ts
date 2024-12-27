@@ -19,7 +19,7 @@ export class NewsController {
   // NEWS HANDLERS
   @Get()
   getAllNews() {
-    this.newsService.findAllNews();
+    return this.newsService.findAllNews();
   }
 
   @Get('/:id')
@@ -28,17 +28,17 @@ export class NewsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.newsService.findNewsById(numericId);
+    return this.newsService.findNewsById(numericId);
   }
 
   @Get('/type/:type')
   getNewsByType(@Param('type') type: string) {
-    this.newsService.findAllNewsByType(type);
+    return this.newsService.findAllNewsByType(type);
   }
 
   @Post()
   createNews(@Body() body: createNewsDto) {
-    this.newsService.createNews(body);
+    return this.newsService.createNews(body);
   }
 
   @Patch('/:id')
@@ -47,7 +47,7 @@ export class NewsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.newsService.updateNews(numericId, body);
+    return this.newsService.updateNews(numericId, body);
   }
 
   @Delete('/:id')
@@ -56,7 +56,7 @@ export class NewsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.newsService.deleteNews(numericId);
+    return this.newsService.deleteNews(numericId);
   }
 
   //NEWS STATUS
@@ -66,7 +66,7 @@ export class NewsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.newsService.findNewsStatusById(numericId);
+    return this.newsService.findNewsStatusById(numericId);
   }
 
   @Post('/status')
@@ -80,6 +80,6 @@ export class NewsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.newsService.updateNewsStatus(numericId, body);
+    return this.newsService.updateNewsStatus(numericId, body);
   }
 }

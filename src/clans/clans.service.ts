@@ -11,7 +11,6 @@ import { ClanMemberRepository } from './clan-member.repository';
 import { ClanInvitationRepository } from './clan-invitation.repository';
 import { ClanRequestRepository } from './clan-request.repository';
 import { createClanDto } from './dtos/create-clan.dto';
-import { Clan } from './entities/clan.entity';
 import { UsersRepository } from 'src/users/users.repository';
 import { updateClanDto } from './dtos/update-clan.dto';
 import { ClanRequest } from './entities/clan-request.entity';

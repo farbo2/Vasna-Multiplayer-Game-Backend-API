@@ -12,7 +12,7 @@ export class ClanMember {
   @Column()
   playerId: number;
 
-  @Column()
+  @Column({ default: 'normal' })
   role: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

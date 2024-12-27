@@ -11,7 +11,7 @@ export class Card {
   @Column()
   type: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column()
@@ -23,6 +23,6 @@ export class Card {
   @Column()
   rarity: number;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isAvailable: boolean;
 }

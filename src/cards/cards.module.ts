@@ -8,6 +8,7 @@ import { UserUnlockedCard } from './entities/user-unlocked-card.entity';
 import { CardsRepository } from './cards.repository';
 import { UserSelectedCardRepository } from './user-selected-card.repository';
 import { UserUnlockedCardRepository } from './user-unlocked-card.repository';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserUnlockedCardRepository } from './user-unlocked-card.repository';
     CardsRepository,
     UserSelectedCardRepository,
     UserUnlockedCardRepository,
+    JwtAuthGuard,
   ],
   controllers: [CardsController],
 })

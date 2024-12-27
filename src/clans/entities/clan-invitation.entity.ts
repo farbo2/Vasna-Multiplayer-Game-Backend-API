@@ -15,12 +15,12 @@ export class ClanInvitation {
   @ManyToOne(() => User)
   inviter: User;
 
-  @Column()
+  @Column({ default: 'Waiting' })
   status: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   sentAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   responsedAt: Date;
 }

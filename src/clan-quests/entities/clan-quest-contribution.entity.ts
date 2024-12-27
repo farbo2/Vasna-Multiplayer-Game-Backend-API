@@ -14,9 +14,9 @@ export class ClanQuestContribution {
   @Column()
   playerId: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   contributionPoint: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastUpdated: Date;
 }

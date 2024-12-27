@@ -8,18 +8,18 @@ export class Notification {
   @Column()
   playerId: number;
 
-  @Column()
+  @Column({ default: 'public' })
   type: string;
 
-  @Column()
+  @Column({ nullable: true })
   relatedId: number;
 
   @Column()
   content: string;
 
-  @Column()
+  @Column({ nullable: true, type: 'boolean', default: false })
   isRead: boolean;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }

@@ -7,7 +7,7 @@ export class MovesController {
   constructor(private movesService: MovesService) {}
   @Post()
   createMove(@Body() body: createMoveDto) {
-    this.movesService.createMove(body);
+    return this.movesService.createMove(body);
   }
 
   @Get('/type-date')
@@ -20,6 +20,6 @@ export class MovesController {
       moveToDate: Date;
     },
   ) {
-    this.getAllUserMovesByTypeAndDate(body);
+    return this.getAllUserMovesByTypeAndDate(body);
   }
 }

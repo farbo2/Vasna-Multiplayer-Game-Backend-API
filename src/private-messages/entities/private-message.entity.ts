@@ -14,9 +14,9 @@ export class PrivateMessage {
   @Column()
   message: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   sentAt: Date;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isRead: boolean;
 }

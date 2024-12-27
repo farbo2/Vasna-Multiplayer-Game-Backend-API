@@ -14,7 +14,7 @@ export class Move {
   @Column()
   moveType: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   moveDate: Date;
 
   @Column()

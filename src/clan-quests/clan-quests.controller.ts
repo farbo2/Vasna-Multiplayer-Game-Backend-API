@@ -21,7 +21,7 @@ export class ClanQuestsController {
 
   @Get()
   getAllClanQuests() {
-    this.clanQuestService.findAllClanQuests();
+    return this.clanQuestService.findAllClanQuests();
   }
 
   @Get('/:id')
@@ -30,7 +30,7 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.findClanQuestById(numericId);
+    return this.clanQuestService.findClanQuestById(numericId);
   }
 
   @Patch('/:id')
@@ -42,7 +42,7 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.updateClanQuest(numericId, body);
+    return this.clanQuestService.updateClanQuest(numericId, body);
   }
 
   @Delete('/:id')
@@ -51,12 +51,12 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.deleteClanQuest(numericId);
+    return this.clanQuestService.deleteClanQuest(numericId);
   }
 
   @Post()
   createClanQuest(@Body() body: createClanQuestDto) {
-    this.clanQuestService.createClanQuest(body);
+    return this.clanQuestService.createClanQuest(body);
   }
 
   // CLAN LEADER AREA
@@ -66,7 +66,7 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.findAllDectiveClanQuestByClanId(numericId);
+    return this.clanQuestService.findAllDectiveClanQuestByClanId(numericId);
   }
 
   @Get('/clan/active/:clanid')
@@ -75,7 +75,7 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.findActiveClanQuestByClanId(numericId);
+    return this.clanQuestService.findActiveClanQuestByClanId(numericId);
   }
 
   @Patch('/:id')
@@ -87,7 +87,7 @@ export class ClanQuestsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.clanQuestService.updateCurrentActiveClanQuest(numericId, body);
+    return this.clanQuestService.updateCurrentActiveClanQuest(numericId, body);
   }
   //CLAN MEMBER AREA
 

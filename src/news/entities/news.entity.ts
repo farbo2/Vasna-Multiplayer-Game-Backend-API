@@ -11,18 +11,18 @@ export class News {
   @Column()
   content: string;
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @Column()
   type: string;
 
-  @Column()
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 }

@@ -8,6 +8,7 @@ import { ClanQuest } from './entities/clan-quest.entity';
 import { CurrentClanQuest } from './entities/current-clan-quest.entity';
 import { ClanQuestContribution } from './entities/clan-quest-contribution.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ClanQuestRepository,
     CurrentClanQuestRepository,
     ClanQuestContributionRepository,
+    JwtAuthGuard,
   ],
   controllers: [ClanQuestsController],
 })

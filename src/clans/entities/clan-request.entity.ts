@@ -18,6 +18,6 @@ export class ClanRequest {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   sentAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   responsedAt: Date;
 }

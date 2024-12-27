@@ -8,7 +8,7 @@ export class Quest {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @Column()
@@ -29,6 +29,6 @@ export class Quest {
   @Column()
   endDate: Date;
 
-  @Column()
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 }

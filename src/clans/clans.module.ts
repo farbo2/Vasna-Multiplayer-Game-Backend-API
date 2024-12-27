@@ -10,10 +10,12 @@ import { ClanRequestRepository } from './clan-request.repository';
 import { ClanInvitationRepository } from './clan-invitation.repository';
 import { ClanMemberRepository } from './clan-member.repository';
 import { UsersModule } from 'src/users/users.module';
+import { Clan } from './entities/clan.entity';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ClanInvitation, ClanMember, ClanRequest]),
+    TypeOrmModule.forFeature([Clan, ClanInvitation, ClanMember, ClanRequest]),
     UsersModule,
   ],
   providers: [
@@ -22,6 +24,7 @@ import { UsersModule } from 'src/users/users.module';
     ClanRequestRepository,
     ClanInvitationRepository,
     ClanMemberRepository,
+    JwtAuthGuard,
   ],
   controllers: [ClansController],
 })

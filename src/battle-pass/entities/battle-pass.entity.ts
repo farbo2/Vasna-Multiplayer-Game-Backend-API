@@ -18,7 +18,7 @@ export class BattlePass {
   @Column()
   sort: number;
 
-  @Column()
+  @Column({ default: 'InQueue' })
   status: string; //Expired-Progressing-InQueue
 
   @OneToMany(

@@ -16,7 +16,7 @@ export class FriendsController {
   constructor(private friendsService: FriendsService) {}
   @Post()
   createFriendship(@Body() body: createFriendDto) {
-    this.friendsService.createFriend(body);
+    return this.friendsService.createFriend(body);
   }
 
   @Get('/:userid')

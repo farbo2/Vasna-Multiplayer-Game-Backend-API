@@ -11,9 +11,9 @@ export class NewsStatus {
   @Column()
   newsId: number;
 
-  @Column()
+  @Column({ nullable: true, type: 'boolean', default: false })
   isRead: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   ReadAt: Date;
 }

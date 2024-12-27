@@ -30,7 +30,7 @@ import { Kill } from './kills/entities/kill.entity';
 import { Match } from './matches/entities/match.entity';
 import { Move } from './moves/entities/move.entity';
 import { News } from './news/entities/news.entity';
-import { NewsStatus } from './news/entities/new-status.entity';
+import { NewsStatus } from './news/entities/news-status.entity';
 import { PrivateMessage } from './private-messages/entities/private-message.entity';
 import { Product } from './products/entities/Product.entity';
 import { ProductCategory } from './products/entities/product-category.entity';
@@ -38,15 +38,18 @@ import { UserPurchase } from './products/entities/user-purchase.entity';
 import { Quest } from './quests/entities/quest.entity';
 import { UserQuest } from './quests/entities/user-quest.entity';
 import { ClanQuest } from './clan-quests/entities/clan-quest.entity';
+import { GameGateway } from './game/game.gateway';
+import { Notification } from './notifications/entities/notification.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mongodb',
+      type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root',
-      password: 'root',
       database: 'koochehkhalvat',
+      username: 'farbod',
+      password: '123400',
+      autoLoadEntities: true,
       entities: [
         BattlePass,
         BattlePassLevel,
@@ -91,6 +94,6 @@ import { ClanQuest } from './clan-quests/entities/clan-quest.entity';
   ],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GameGateway],
 })
 export class AppModule {}

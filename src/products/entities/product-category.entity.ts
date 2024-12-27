@@ -8,9 +8,6 @@ export class ProductCategory {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
-
-  @Column()
-  createdAt: Date;
 }

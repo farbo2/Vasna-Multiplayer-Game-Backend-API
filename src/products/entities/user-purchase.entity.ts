@@ -1,7 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
-import { Product } from './Product.entity';
-
 @Entity()
 export class UserPurchase {
   @PrimaryGeneratedColumn()
@@ -10,21 +8,27 @@ export class UserPurchase {
   @Column()
   userId: number;
 
-  @ManyToOne(() => Product)
-  product: Product;
-
   @Column()
+  productId: number;
+
+  @Column({ nullable: true })
   description: string;
 
   @Column()
   price: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
+  discount: number;
+
+  @Column({ type: 'boolean', default: false })
+  hasDiscount: boolean;
+
+  @Column({ default: 'Rial' })
   currency: string;
 
-  @Column()
+  @Column({ default: 'Processing' })
   status: boolean;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   purchasedAt: Date;
 }

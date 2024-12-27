@@ -7,7 +7,7 @@ export class NotificationsController {
   constructor(private notificationsService: NotificationsService) {}
   @Post()
   sendNotificationToUser(@Body() body: createNotificationDto) {
-    this.notificationsService.createNotification(body);
+    return this.notificationsService.createNotification(body);
   }
 
   @Get('/user/:userid')
@@ -16,6 +16,8 @@ export class NotificationsController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.notificationsService.findAllUnseenNotificationsByUserId(numericId);
+    return this.notificationsService.findAllUnseenNotificationsByUserId(
+      numericId,
+    );
   }
 }

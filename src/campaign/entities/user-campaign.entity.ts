@@ -11,7 +11,7 @@ export class UserCampaign {
   @Column()
   campaignId: number;
 
-  @Column()
+  @Column({ default: 'Processing' })
   status: string;
 
   @Column()

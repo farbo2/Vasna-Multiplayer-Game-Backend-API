@@ -10,6 +10,7 @@ import { BattlePassInventory } from './entities/battle-pass-inventory.entity';
 import { BattlePassProgressRepository } from './battle-pass-progress.repository';
 import { BattlePassLevelRepository } from './battle-pass-level.repository';
 import { BattlePassInventoryRepository } from './battle-pass-inventory.repository';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BattlePassInventoryRepository } from './battle-pass-inventory.repositor
     BattlePassProgressRepository,
     BattlePassLevelRepository,
     BattlePassInventoryRepository,
+    JwtAuthGuard,
   ],
   controllers: [BattlePassController],
 })

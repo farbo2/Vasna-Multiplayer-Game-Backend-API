@@ -11,12 +11,12 @@ export class BattlePassProgress {
   @Column()
   battlePassId: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   currentLevel: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   xpCollected: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastUpdated: Date;
 }

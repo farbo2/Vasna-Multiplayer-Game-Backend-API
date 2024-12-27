@@ -8,12 +8,12 @@ export class MatchesController {
   constructor(private matchService: MatchesService) {}
   @Post()
   createMatch(@Body() body: createMatchDto) {
-    this.matchService.createMatch(body);
+    return this.matchService.createMatch(body);
   }
 
   @Get(':id')
   getMatchById(@Param('id') id: number) {
-    this.matchService.findMatchById(id);
+    return this.matchService.findMatchById(id);
   }
 
   @Patch(':id')
@@ -22,7 +22,7 @@ export class MatchesController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.matchService.updateMatch(numericId, body);
+    return this.matchService.updateMatch(numericId, body);
   }
 
   @Get('/winner/:userId')
@@ -31,6 +31,6 @@ export class MatchesController {
     if (isNaN(numericId)) {
       throw new Error('Invalid ID format');
     }
-    this.matchService.findAllWinsMatchByUserId(numericId);
+    return this.matchService.findAllWinsMatchByUserId(numericId);
   }
 }

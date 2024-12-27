@@ -8,10 +8,10 @@ export class User {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ nullable: true })
   fullName: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column()
@@ -20,21 +20,21 @@ export class User {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   xp: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   coins: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   bankNotes: number;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isOnline: boolean;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastLogin: Date;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }

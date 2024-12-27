@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { News } from './entities/news.entity';
 import { NewsStatus } from './entities/news-status.entity';
 import { NewsStatusRepository } from './news-status.repository';
+import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([News, NewsStatus])],
-  providers: [NewsService, NewsRepository, NewsStatusRepository],
+  providers: [NewsService, NewsRepository, NewsStatusRepository, JwtAuthGuard],
   controllers: [NewsController],
 })
 export class NewsModule {}

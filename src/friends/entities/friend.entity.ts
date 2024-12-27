@@ -12,7 +12,7 @@ export class Friend {
   @ManyToOne(() => User)
   friend: User;
 
-  @Column()
+  @Column({ default: 'Waiting' })
   status: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

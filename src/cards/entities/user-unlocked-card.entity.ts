@@ -15,6 +15,6 @@ export class UserUnlockedCard {
   @Column()
   level: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   unlockedAt: number;
 }

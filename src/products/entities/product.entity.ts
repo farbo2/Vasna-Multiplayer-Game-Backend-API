@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { ProductCategory } from './product-category.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -7,29 +6,32 @@ export class Product {
   id: number;
 
   @Column()
-  name: number;
-
-  @ManyToOne(() => ProductCategory)
-  category: ProductCategory;
+  name: string;
 
   @Column()
+  categoryId: number;
+
+  @Column({ nullable: true })
   description: string;
 
   @Column()
   price: number;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
+  discount: number;
+
+  @Column({ type: 'boolean', default: false })
+  hasDiscount: boolean;
+
+  @Column({ default: 'Rial' })
   currency: string;
 
-  @Column()
+  @Column({ nullable: true })
   details: string;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isAvailable: boolean;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
-
-  @Column()
-  updatedAt: Date;
 }

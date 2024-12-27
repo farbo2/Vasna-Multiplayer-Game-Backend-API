@@ -11,7 +11,7 @@ export class Match {
   @Column()
   player2Id: number;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   startTime: Date;
 
   @Column()
@@ -23,6 +23,6 @@ export class Match {
   @Column()
   matchType: string;
 
-  @Column()
+  @Column({ default: 'Waiting' })
   status: string;
 }

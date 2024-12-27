@@ -12,7 +12,7 @@ export class CurrentClanQuest {
   @ManyToOne(() => ClanQuest)
   clanQuest: ClanQuest;
 
-  @Column()
+  @Column({ type: 'int', default: 0 })
   currentPoint: number;
 
   @Column()
@@ -21,15 +21,15 @@ export class CurrentClanQuest {
   @Column()
   endDate: Date;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isExpired: boolean;
 
-  @Column()
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @Column()
+  @Column({ default: 'Processing' })
   status: string; //Processing-Successful-Failed
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastUpdated: Date;
 }

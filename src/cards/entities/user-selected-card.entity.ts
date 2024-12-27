@@ -18,6 +18,6 @@ export class UserSelectedCard {
   @OneToOne(() => UserUnlockedCard)
   card: UserUnlockedCard;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   selectedAt: Date;
 }
