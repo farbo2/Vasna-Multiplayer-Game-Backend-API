@@ -196,7 +196,6 @@ src/
 
 ## Known limitations before production
 
-- The full project has not been compiled or tested in this environment because dependency installation did not complete. Run `npm ci`, `npm run build`, `npm test`, and `npm run test:e2e` in CI before release.
 - The included migration is incremental, not a complete initial schema migration. Existing deployments must back up the database and validate the migration before applying it.
 - Match, kill, card, campaign, battle-pass, product, purchase, notification, and clan-quest workflows still need a dedicated authorization and transaction review. Authentication alone does not prove ownership of every referenced resource.
 - Product purchase-management endpoints are administrator-only placeholders. There is no payment-provider verification or player-facing purchase fulfillment flow. Purchase fulfillment, currency/reward grants, quest completion, and battle-pass progression must be made server-authoritative and idempotent before real-money or competitive use.
@@ -206,6 +205,3 @@ src/
 - Rate limiting, account recovery, email/device verification, refresh-token rotation, audit logging, and operational monitoring are not implemented here.
 - Add integration tests for login, authorization boundaries, clan membership races, private messaging, purchases, and progression before production deployment.
 
-## License
-
-No open-source license is included. Unless a license is added, this repository should be treated as having no granted open-source reuse permissions.
