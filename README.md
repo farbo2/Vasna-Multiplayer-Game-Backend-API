@@ -1,99 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+Vasna Game Backend
+A NestJS-based backend for a multiplayer game. The project is organized into feature modules for player data, matches, clans, progression systems, game content, and real-time communication.
+> **Development status:** This repository is a work in progress. Several modules contain placeholder controllers or services, and the current implementation has security and API-design issues that must be addressed before production use. The feature list below describes the modules present in the codebase, not a claim that every feature is complete.
+Technology Stack
+NestJS 10 and TypeScript
+MySQL
+TypeORM
+Socket.IO
+JWT authentication support through `@nestjs/jwt` and Passport
+`class-validator` and `class-transformer`
+Jest for unit tests
+Features and Modules
+The source code is divided into the following feature modules:
+Module	Responsibility
+`users`	Player account and profile data
+`matches`	Match records and match results
+`moves`	Player move records and move queries
+`kills`	Kill records and match/player statistics
+`clans`	Clan management, members, invitations, and join requests
+`clan-quests`	Clan quests and contribution tracking
+`friends`	Player friendship records
+`private-messages`	Private messaging
+`notifications`	Player notifications
+`cards`	Card definitions, unlocked cards, and selected cards
+`campaign`	Campaigns and player campaign progress
+`quests`	Quest definitions and player quest progress
+`news`	News content and player news status
+`products`	Product catalog, categories, and player purchase records
+`battle-pass`	Battle passes, levels, rewards/inventory, and player progress
+`game`	Socket.IO gateway for real-time events
+The application also exposes a basic root endpoint:
+```http
+GET /
 ```
-
-## Compile and run the project
-
+It currently returns `Hello World!`.
+Requirements
+Node.js and npm
+MySQL server
+A MySQL database configured for this application
+The repository does not currently include a complete environment-based configuration. Database connection values are hardcoded in `src/app.module.ts`. Review and replace those values before running the application. Do not commit real credentials.
+Getting Started
+1. Clone the repository
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <repository-url>
+cd vasna-game-backend
 ```
-
-## Run tests
-
+Replace `<repository-url>` with the actual repository URL.
+2. Install dependencies
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+3. Configure MySQL
+Create a MySQL database, then update the TypeORM connection settings in:
+```text
+src/app.module.ts
+```
+The current configuration specifies the database host, port, database name, username, and password directly in source code.
+For any shared or production deployment, move these values to environment variables and load them through a proper configuration module. Do not use the sample credentials in a deployed environment.
+4. Run the application
+Development mode:
 ```bash
-$ npm install -g mau
-$ mau deploy
+npm run start:dev
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Standard mode:
+```bash
+npm run start
+```
+Production mode, after building:
+```bash
+npm run build
+npm run start:prod
+```
+The application listens on port `3000` by default. The port can be overridden with the `PORT` environment variable.
+Available Scripts
+Command	Description
+`npm run start`	Start the application
+`npm run start:dev`	Start in watch mode
+`npm run start:debug`	Start in debug/watch mode
+`npm run build`	Compile the application
+`npm run start:prod`	Run the compiled application
+`npm run lint`	Run ESLint with automatic fixes
+`npm run format`	Format source and test files with Prettier
+`npm run test`	Run unit tests
+`npm run test:watch`	Run tests in watch mode
+`npm run test:cov`	Run tests with coverage
+`npm run test:e2e`	Run end-to-end tests
+Test files are present in the repository, but test execution and coverage have not been verified as part of this documentation.
+Real-time Communication
+The project registers a Socket.IO gateway in `src/game/game.gateway.ts`.
+The events currently implemented in the gateway are:
+Event	Direction	Current behavior
+`ping`	Client → Server	Server responds to the requesting client with `pong`
+`pong`	Server → Client	Sent after connection and in response to `ping`
+`state`	Client → Server → Other clients	Received state data is broadcast to other connected clients
+This is a minimal implementation. It does not currently provide authenticated socket connections, match-scoped rooms, payload validation, or authoritative game-state handling.
+Project Structure
+```text
+src/
+├── battle-pass/
+├── campaign/
+├── cards/
+├── clan-quests/
+├── clans/
+├── friends/
+├── game/
+├── guards/
+├── kills/
+├── matches/
+├── moves/
+├── news/
+├── notifications/
+├── private-messages/
+├── products/
+├── quests/
+├── users/
+├── app.controller.ts
+├── app.module.ts
+├── app.service.ts
+└── main.ts
+```
+Most feature modules follow a similar organization:
+`*.module.ts` — NestJS module definition
+`*.controller.ts` — HTTP route handlers
+`*.service.ts` — business logic
+`*.repository.ts` — database access
+`dtos/` — request data-transfer objects
+`entities/` — TypeORM entities
+`*.spec.ts` — unit tests
+Not every module currently contains all of these layers or has complete implementations.
+Important Development Notes
+Before using this backend with real players or deploying it publicly, address at least the following:
+Database configuration: Remove hardcoded credentials and use environment-based configuration. Rotate any credentials that have been exposed.
+Database schema management: `synchronize` is currently enabled in TypeORM configuration. Disable it for production and manage schema changes with migrations.
+Authentication and authorization: Apply authentication consistently and enforce resource ownership and role-based permissions for sensitive operations.
+JWT validation: Review the custom JWT guard and its user/admin authorization logic.
+WebSocket security: Authenticate socket connections, validate incoming payloads, and scope broadcasts to the appropriate match or room.
+Incomplete modules: Users, quests, and private messages contain placeholder implementations. Other modules also have unfinished logic.
+API correctness: Review route parameter definitions, GET request bodies, DTO validation, exception handling, and controller return values.
+Game economy and progression: Make rewards, purchases, currency changes, and progression updates authoritative and protected against duplicate or unauthorized requests.
+Testing: Add integration and end-to-end tests for authentication, permissions, match flows, clan membership, purchases, and progression.
+License
+No open-source license is currently specified for this repository. Unless a license is added, the project should be treated as having no granted open-source reuse permissions.
