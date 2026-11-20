@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CampaignController } from './campaign.controller';
@@ -10,7 +11,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Campaign, UserCampaign])],
-  providers: [
+  providers: [AdminGuard, 
     CampaignService,
     UserCampaignRepository,
     CampaignRepository,

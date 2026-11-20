@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationsRepository } from './notifications.repository';
 import { createNotificationDto } from './dtos/create-notification.dto';
 
@@ -11,7 +10,6 @@ import { createNotificationDto } from './dtos/create-notification.dto';
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
   constructor(
-    @InjectRepository(NotificationsRepository)
     private notificationRepo: NotificationsRepository,
   ) {}
 

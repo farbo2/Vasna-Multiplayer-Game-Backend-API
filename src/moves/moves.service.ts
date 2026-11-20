@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { MovesRepository } from './moves.repository';
 import { createMoveDto } from './dtos/create-move.dto';
 
@@ -11,7 +10,6 @@ import { createMoveDto } from './dtos/create-move.dto';
 export class MovesService {
   private readonly logger = new Logger(MovesService.name);
   constructor(
-    @InjectRepository(MovesRepository)
     private movesRepo: MovesRepository,
   ) {}
 

@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import {
   Body,
   Controller,
@@ -7,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
   Put,
 } from '@nestjs/common';
 import { BattlePassService } from './battle-pass.service';
@@ -32,11 +34,13 @@ export class BattlePassController {
     var IntId = parseInt(id);
     return this.battlePassService.findBattlePassById(IntId);
   }
+  @UseGuards(AdminGuard)
 
   @Post()
   async createBattlePass(@Body() body: createBattlePassDto) {
     return this.battlePassService.createBattlePass(body);
   }
+  @UseGuards(AdminGuard)
 
   @Put('/:id')
   updateBattlePass(@Param('id') id: string, @Body() body: UpdateBattlePassDto) {
@@ -46,6 +50,7 @@ export class BattlePassController {
     }
     return this.battlePassService.updateBattlePass(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/:id')
   async removeBattlePassById(
@@ -63,6 +68,7 @@ export class BattlePassController {
     var IntId = parseInt(id);
     return this.battlePassService.findBattlePassLevelById(IntId);
   }
+  @UseGuards(AdminGuard)
 
   @Post(':battlePassId/levels')
   async addLevelsToBattlePass(
@@ -74,6 +80,7 @@ export class BattlePassController {
       addBattlePassLevelsDto,
     );
   }
+  @UseGuards(AdminGuard)
 
   @Put('/level/:id')
   updateBattlePassLevel(
@@ -86,6 +93,7 @@ export class BattlePassController {
     }
     return this.battlePassService.updateBattlePassLevel(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/level/:id')
   async removeBattlePassLevelById(
@@ -109,12 +117,14 @@ export class BattlePassController {
     var IntId = parseInt(id);
     return this.battlePassService.findBattlePassInventoriesByLevelId(IntId);
   }
+  @UseGuards(AdminGuard)
   @Post()
   async createBattlePassInventoryWithLevelId(
     @Body() body: CreateBattlePassInventoryDto,
   ) {
     return this.battlePassService.createBattlePassInventory(body);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/inventory/:id')
   updateBattlePassLevelInventoryById(
@@ -127,6 +137,7 @@ export class BattlePassController {
     }
     return this.battlePassService.updateBattlePassInventory(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/inventory/:id')
   async removeBattlePassInventoryById(
@@ -152,6 +163,7 @@ export class BattlePassController {
       IntId,
     );
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/progress')
   progressCurrentActiveBattlePass(@Body() body: progressActiveBattlePass) {

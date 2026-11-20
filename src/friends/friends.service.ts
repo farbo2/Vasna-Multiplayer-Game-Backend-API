@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { FriendsRepository } from './friends.repository';
 import { createFriendDto } from './dtos/create-friend.dto';
 import { UsersRepository } from 'src/users/users.repository';
@@ -13,9 +12,7 @@ import { updateFriendDto } from './dtos/update-friend.dto';
 export class FriendsService {
   private readonly logger = new Logger(FriendsService.name);
   constructor(
-    @InjectRepository(FriendsRepository)
     private friendRepo: FriendsRepository,
-    @InjectRepository(UsersRepository)
     private usersRepo: UsersRepository,
   ) {}
 

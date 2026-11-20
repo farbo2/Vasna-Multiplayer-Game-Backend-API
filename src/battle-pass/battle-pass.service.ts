@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { BattlePassRepository } from './battle-pass.repository';
 import { BattlePassProgressRepository } from './battle-pass-progress.repository';
 import { BattlePassLevelRepository } from './battle-pass-level.repository';
@@ -20,13 +19,9 @@ import { BattlePassInventory } from './entities/battle-pass-inventory.entity';
 export class BattlePassService {
   private readonly logger = new Logger(BattlePassService.name);
   constructor(
-    @InjectRepository(BattlePassRepository)
     private battlePassRepo: BattlePassRepository,
-    @InjectRepository(BattlePassProgressRepository)
     private battlePassProgressRepo: BattlePassProgressRepository,
-    @InjectRepository(BattlePassLevelRepository)
     private battlePassLevelRepo: BattlePassLevelRepository,
-    @InjectRepository(BattlePassInventoryRepository)
     private battlePassInventoryRepo: BattlePassInventoryRepository,
   ) {}
   // BATTLE PASS SERVICES

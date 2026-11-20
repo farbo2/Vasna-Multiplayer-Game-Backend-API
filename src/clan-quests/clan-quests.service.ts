@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ClanQuestRepository } from './clan-quests.repository';
 import { CurrentClanQuestRepository } from './current-clan-quest.repository';
 import { ClanQuestContributionRepository } from './clan-quest-contribution.repository';
@@ -15,11 +14,8 @@ import { updateCurrentClanQuestDto } from './dtos/update-current-clan-quest.dto'
 export class ClanQuestsService {
   private readonly logger = new Logger(ClanQuestsService.name);
   constructor(
-    @InjectRepository(ClanQuestRepository)
     private clanQuestRepo: ClanQuestRepository,
-    @InjectRepository(CurrentClanQuestRepository)
     private currentClanQuestRepo: CurrentClanQuestRepository,
-    @InjectRepository(ClanQuestContributionRepository)
     private clanQuestContributionRepo: ClanQuestContributionRepository,
   ) {}
 

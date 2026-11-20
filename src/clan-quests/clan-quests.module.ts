@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { ClanQuestsService } from './clan-quests.service';
 import { ClanQuestsController } from './clan-quests.controller';
@@ -18,7 +19,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
       ClanQuestContribution,
     ]),
   ],
-  providers: [
+  providers: [AdminGuard, 
     ClanQuestsService,
     ClanQuestRepository,
     CurrentClanQuestRepository,

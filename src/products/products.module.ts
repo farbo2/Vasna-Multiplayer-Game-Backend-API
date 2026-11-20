@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
@@ -12,7 +13,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product, ProductCategory, UserPurchase])],
-  providers: [
+  providers: [AdminGuard, 
     ProductsService,
     ProductsRepository,
     ProductCategoriesRepository,

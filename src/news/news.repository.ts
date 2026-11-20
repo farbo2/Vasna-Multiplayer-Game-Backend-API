@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { News } from './entities/news.entity';
 
 @Injectable()
 export class NewsRepository extends Repository<News> {
+  constructor(dataSource: DataSource) {
+    super(News, dataSource.createEntityManager());
+  }
+
   async findAllNews(): Promise<News[]> {
     return this.find();
   }

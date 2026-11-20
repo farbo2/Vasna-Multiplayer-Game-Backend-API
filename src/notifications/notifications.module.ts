@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationsController } from './notifications.controller';
@@ -8,7 +9,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Notification])],
-  providers: [NotificationsService, NotificationsRepository, JwtAuthGuard],
+  providers: [AdminGuard, NotificationsService, NotificationsRepository, JwtAuthGuard],
   controllers: [NotificationsController],
 })
 export class NotificationsModule {}

@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductsRepository extends Repository<Product> {
+  constructor(dataSource: DataSource) {
+    super(Product, dataSource.createEntityManager());
+  }
+
   async findAllProducts(): Promise<Product[]> {
     return this.find();
   }
@@ -12,7 +16,7 @@ export class ProductsRepository extends Repository<Product> {
     return this.findOne({ where: { id: id } });
   }
   async findProductsByCategoryId(categoryId: number): Promise<Product[]> {
-    return this.find({ where: { id: categoryId } });
+    return this.find({ where: { categoryId } });
   }
   async updateProduct(
     id: number,

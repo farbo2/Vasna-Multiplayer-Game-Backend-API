@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { KillsRepository } from './kills.repository';
 import { createKillDto } from './dtos/create-kill.dto';
 
@@ -11,7 +10,6 @@ import { createKillDto } from './dtos/create-kill.dto';
 export class KillsService {
   private readonly logger = new Logger(KillsService.name);
   constructor(
-    @InjectRepository(KillsRepository)
     private killRepo: KillsRepository,
   ) {}
 

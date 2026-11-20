@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CampaignRepository } from './campaign.repository';
 import { UserCampaignRepository } from './user-campaign.repository';
 import { createCampaignDto } from './dtos/create-campaign.dto';
@@ -15,9 +14,7 @@ export class CampaignService {
   private readonly logger = new Logger(CampaignService.name);
 
   constructor(
-    @InjectRepository(CampaignRepository)
     private campaignRepo: CampaignRepository,
-    @InjectRepository(UserCampaignRepository)
     private userCampaignRepo: UserCampaignRepository,
   ) {}
 

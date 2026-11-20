@@ -17,8 +17,11 @@ export class User {
   @Column()
   deviceId: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
+
+  @Column({ default: 'user' })
+  role: string;
 
   @Column({ type: 'int', default: 0 })
   xp: number;

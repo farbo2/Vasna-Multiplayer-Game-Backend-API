@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { MatchesRepository } from './matches.repository';
 import { createMatchDto } from './dtos/create-match.dto';
 import { updateMatchDto } from './dtos/update-match.dto';
@@ -12,7 +11,6 @@ import { updateMatchDto } from './dtos/update-match.dto';
 export class MatchesService {
   private readonly logger = new Logger(MatchesService.name);
   constructor(
-    @InjectRepository(MatchesRepository)
     private matchRepo: MatchesRepository,
   ) {}
   async createMatch(data: createMatchDto) {

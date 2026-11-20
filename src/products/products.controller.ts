@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import {
   Body,
   Controller,
@@ -6,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { updateProductDto } from './dtos/update-product.dto';
 import { createUserPurchaseDto } from './dtos/create-user-purchase.dto';
@@ -33,21 +35,15 @@ export class ProductsController {
     return this.productsService.findProductsByCategoryId(numericId);
   }
 
-  @Get('/:id')
-  getProductById(@Param('id') id: string) {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.productsService.findProductById(numericId);
-  }
+  @UseGuards(AdminGuard)
 
   @Post()
   createProduct(@Body() body: createProductDto) {
     return this.productsService.createProduct(body);
   }
+  @UseGuards(AdminGuard)
 
-  @Patch()
+  @Patch('/:id')
   updateProduct(@Param('id') id: string, @Body() body: updateProductDto) {
     const numericId = parseInt(id, 10);
     if (isNaN(numericId)) {
@@ -55,6 +51,7 @@ export class ProductsController {
     }
     return this.productsService.updateProduct(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/:id')
   removeProduct(@Param('id') id: string) {
@@ -79,13 +76,15 @@ export class ProductsController {
     }
     return this.productsService.findProductCategoryById(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Post('/category')
   createProductCategory(@Body() body: createProductCategoryDto) {
     return this.productsService.createProductCategory(body);
   }
+  @UseGuards(AdminGuard)
 
-  @Patch('/category')
+  @Patch('/category/:id')
   updateProductCategory(
     @Param('id') id: string,
     @Body() body: updateProductCategoryDto,
@@ -96,6 +95,7 @@ export class ProductsController {
     }
     return this.productsService.updateProductCategory(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/category/:id')
   removeProductCategory(@Param('id') id: string) {
@@ -105,12 +105,13 @@ export class ProductsController {
     }
     return this.productsService.deleteProductCategory(numericId);
   }
-
   //USER PURCHASE HANDLERS
+  @UseGuards(AdminGuard)
   @Get('/purchase')
   getAllPurchases() {
     return this.productsService.findAllUserPurchases();
   }
+  @UseGuards(AdminGuard)
 
   @Get('/purchase/:id')
   getPurchaseById(@Param('id') id: string) {
@@ -120,6 +121,7 @@ export class ProductsController {
     }
     return this.productsService.findUserPurchaseById(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Get('/purchase/user/:userid')
   getAllPurchasesByUserId(@Param('userid') userId: string) {
@@ -129,11 +131,13 @@ export class ProductsController {
     }
     return this.productsService.findUserPurchasesByUserId(numericUserId);
   }
+  @UseGuards(AdminGuard)
 
   @Post('/purchase')
   createPurchase(@Body() body: createUserPurchaseDto) {
     return this.productsService.createUserPurchase(body);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/purchase/:id')
   updatePurchase(@Param('id') id: string, @Body() body: updateUserPurchaseDto) {
@@ -143,6 +147,7 @@ export class ProductsController {
     }
     return this.productsService.updateUserPurchase(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/purchase/:id')
   removePurchaseById(@Param('id') id: string) {
@@ -151,5 +156,13 @@ export class ProductsController {
       throw new Error('Invalid ID format');
     }
     return this.productsService.deleteUserPurchase(numericId);
+  }
+  @Get('/:id')
+  getProductById(@Param('id') id: string) {
+    const numericId = parseInt(id, 10);
+    if (isNaN(numericId)) {
+      throw new Error('Invalid ID format');
+    }
+    return this.productsService.findProductById(numericId);
   }
 }

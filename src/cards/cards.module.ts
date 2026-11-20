@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { CardsService } from './cards.service';
 import { CardsController } from './cards.controller';
@@ -14,7 +15,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
   imports: [
     TypeOrmModule.forFeature([Card, UserSelectedCard, UserUnlockedCard]),
   ],
-  providers: [
+  providers: [AdminGuard, 
     CardsService,
     CardsRepository,
     UserSelectedCardRepository,

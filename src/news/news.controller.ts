@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import {
   Body,
   Controller,
@@ -6,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { updateNewsDto } from './dtos/update-news.dto';
 import { createNewsStatusDto } from './dtos/create-news-status.dto';
@@ -35,11 +37,13 @@ export class NewsController {
   getNewsByType(@Param('type') type: string) {
     return this.newsService.findAllNewsByType(type);
   }
+  @UseGuards(AdminGuard)
 
   @Post()
   createNews(@Body() body: createNewsDto) {
     return this.newsService.createNews(body);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/:id')
   updateNews(@Param('id') id: string, @Body() body: updateNewsDto) {
@@ -49,6 +53,7 @@ export class NewsController {
     }
     return this.newsService.updateNews(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/:id')
   deleteNews(@Param('id') id: string) {
@@ -68,11 +73,13 @@ export class NewsController {
     }
     return this.newsService.findNewsStatusById(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Post('/status')
   createNewsStatus(@Body() body: createNewsStatusDto) {
-    this.newsService.createNewsStatus(body);
+    return this.newsService.createNewsStatus(body);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/status/:id')
   updateNewsStatus(@Param('id') id: string, @Body() body: updateNewsStatusDto) {

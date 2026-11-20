@@ -1,12 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { AuthenticatedUser, JwtAuthGuard } from '../guards/jwt-auth/jwt-auth.guard';
 import { ClansService } from './clans.service';
 import { createClanDto } from './dtos/create-clan.dto';
 import { updateClanDto } from './dtos/update-clan.dto';
@@ -14,204 +8,105 @@ import { createClanRequestDto } from './dtos/create-clan-request.dto';
 import { createClanInvitationDto } from './dtos/create-clan-invitation.dto';
 
 @Controller('clans')
+@UseGuards(JwtAuthGuard)
 export class ClansController {
-  constructor(private clansService: ClansService) {}
-  //CLAN HANDLERS
+  constructor(private readonly clansService: ClansService) {}
+
   @Get()
-  getAllClans() {
-    return this.clansService.findAllClans();
-  }
+  getAllClans() { return this.clansService.findAllClans(); }
 
   @Post()
-  createClan(@Body() body: createClanDto) {
-    return this.clansService.createClan(body);
+  createClan(@Body() body: createClanDto, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureCreateClan(body, req.user.id);
   }
 
-  @Patch('/:id')
-  updateClan(@Param('id') clanId: string, @Body() body: updateClanDto) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.updateClan(numericClanId, body);
+  @Patch(':id')
+  updateClan(@Param('id', ParseIntPipe) id: number, @Body() body: updateClanDto, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureUpdateClan(id, body, req.user.id);
   }
 
-  @Delete('/:id')
-  deleteClan(@Param('id') id: string) {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.deleteClan(numericId);
+  @Delete(':id')
+  deleteClan(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureDeleteClan(id, req.user.id);
   }
 
-  // CLAN MEMBERS HANDLER
   @Post(':clanId/members')
-  async addMember(
-    @Param('clanId') clanId: string,
-    @Body() body: { playerId: number; role: string },
-  ) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.addMemberToClan(numericClanId, body);
+  addMember(@Param('clanId', ParseIntPipe) clanId: number, @Body('playerId', ParseIntPipe) playerId: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureAddMember(clanId, playerId, req.user.id);
   }
 
   @Patch(':clanId/members/:memberId')
-  async updateMemberRole(
-    @Param('clanId') clanId: string,
-    @Param('memberId') memberId: string,
-    @Body() body: { role: string },
-  ) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    const numericMemberId = parseInt(memberId, 10);
-    if (isNaN(numericMemberId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.updateMemberRole(
-      numericClanId,
-      numericMemberId,
-      body.role,
-    );
+  updateMemberRole(@Param('clanId', ParseIntPipe) clanId: number, @Param('memberId', ParseIntPipe) memberId: number, @Body('role') role: string, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureUpdateMemberRole(clanId, memberId, role, req.user.id);
   }
 
   @Delete(':clanId/members/:memberId')
-  async removeMember(
-    @Param('clanId') clanId: string,
-    @Param('memberId') memberId: string,
-  ) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    const numericMemberId = parseInt(memberId, 10);
-    if (isNaN(numericMemberId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.removeMember(numericClanId, numericMemberId);
+  removeMember(@Param('clanId', ParseIntPipe) clanId: number, @Param('memberId', ParseIntPipe) memberId: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureRemoveMember(clanId, memberId, req.user.id);
   }
 
-  // CLAN REQUEST HANDLERS
-  @Get('/request/sender/:id')
-  getAllClanRequestsBySenderId(@Param('id') senderId: string) {
-    const numericSenderId = parseInt(senderId, 10);
-    if (isNaN(numericSenderId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getAllClanRequestsBySenderId(numericSenderId);
+  @Get('request/sender/:id')
+  getAllClanRequestsBySenderId(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanRequestsBySender(id, req.user.id);
   }
 
-  @Get('/request/clan/:id')
-  getAllClanRequestsByClanId(@Param('id') clanId: string) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getAllClanRequestsByClanId(numericClanId);
+  @Get('request/clan/:id')
+  getAllClanRequestsByClanId(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanRequestsByClan(id, req.user.id);
   }
 
-  @Get('/request/:id')
-  getClanRequestById(@Param('id') id: string) {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getClanRequestById(numericId);
+  @Get('request/:id')
+  getClanRequestById(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanRequestById(id, req.user.id);
   }
 
-  @Post('/request')
-  sendClanRequest(@Body() body: createClanRequestDto) {
-    return this.clansService.sendClanRequest(body);
+  @Post('request')
+  sendClanRequest(@Body() body: createClanRequestDto, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureSendClanRequest(body, req.user.id);
   }
 
-  @Delete('/request/:id')
-  cancelClanRequest(@Param('id') clanRequestId: string) {
-    const numericClanRequestId = parseInt(clanRequestId, 10);
-    if (isNaN(numericClanRequestId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.deleteClanRequest(numericClanRequestId);
+  @Delete('request/:id')
+  cancelClanRequest(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureDeleteClanRequest(id, req.user.id);
   }
 
-  @Patch('/request/:id')
-  responseClanRequest(
-    @Param('id') requestId: string,
-    @Body('status') status: string,
-  ) {
-    const numericRequestId = parseInt(requestId, 10);
-    if (isNaN(numericRequestId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.responseClanRequest(numericRequestId, status);
+  @Patch('request/:id')
+  responseClanRequest(@Param('id', ParseIntPipe) id: number, @Body('status') status: string, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureResponseClanRequest(id, status, req.user.id);
   }
 
-  //CLAN INVITATION HANDLERS
-  @Get('/invite/inviter/:id')
-  getAllClanInvitationsByInviterId(@Param('id') inviterId: string) {
-    const numericInviterId = parseInt(inviterId, 10);
-    if (isNaN(numericInviterId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getAllClanInvitationsByInviterId(numericInviterId);
+  @Get('invite/inviter/:id')
+  getAllClanInvitationsByInviterId(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanInvitationsByInviter(id, req.user.id);
   }
 
-  @Get('/invite/invited/:id')
-  getAllClanInvitationsByInvitedId(@Param('id') invitedId: string) {
-    const numericInvitedId = parseInt(invitedId, 10);
-    if (isNaN(numericInvitedId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getAllClanInvitationsByInvitedId(numericInvitedId);
+  @Get('invite/invited/:id')
+  getAllClanInvitationsByInvitedId(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanInvitationsByInvited(id, req.user.id);
   }
 
-  @Get('/invite/clan/:id')
-  getAllClanInvitationsByClanId(@Param('id') clanId: string) {
-    const numericClanId = parseInt(clanId, 10);
-    if (isNaN(numericClanId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getAllClanInvitationsByClanId(numericClanId);
+  @Get('invite/clan/:id')
+  getAllClanInvitationsByClanId(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanInvitationsByClan(id, req.user.id);
   }
 
-  @Get('/invite/:id')
-  getClanInvitationById(@Param('id') id: string) {
-    const numericId = parseInt(id, 10);
-    if (isNaN(numericId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.getClanInvitationById(numericId);
+  @Get('invite/:id')
+  getClanInvitationById(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureGetClanInvitationById(id, req.user.id);
   }
 
-  @Post('/invite')
-  sendClanInvitation(@Body() body: createClanInvitationDto) {
-    return this.clansService.sendClanInvitation(body);
+  @Post('invite')
+  sendClanInvitation(@Body() body: createClanInvitationDto, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureSendClanInvitation(body, req.user.id);
   }
 
-  @Delete('/invite/:id')
-  cancelClanInvitation(@Param('id') clanInvitationId: string) {
-    const numericClanInvitationId = parseInt(clanInvitationId, 10);
-    if (isNaN(numericClanInvitationId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.deleteClanInvitation(numericClanInvitationId);
+  @Delete('invite/:id')
+  cancelClanInvitation(@Param('id', ParseIntPipe) id: number, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureDeleteClanInvitation(id, req.user.id);
   }
 
-  @Patch('/invite/:id')
-  responseClanInvitation(
-    @Param('id') invitationId: string,
-    @Body('status') status: string,
-  ) {
-    const numericInvitationId = parseInt(invitationId, 10);
-    if (isNaN(numericInvitationId)) {
-      throw new Error('Invalid ID format');
-    }
-    return this.clansService.responseClanInvitation(
-      numericInvitationId,
-      status,
-    );
+  @Patch('invite/:id')
+  responseClanInvitation(@Param('id', ParseIntPipe) id: number, @Body('status') status: string, @Req() req: Request & { user: AuthenticatedUser }) {
+    return this.clansService.secureResponseClanInvitation(id, status, req.user.id);
   }
 }

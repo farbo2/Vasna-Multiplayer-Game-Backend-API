@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PrivateMessagesService } from './private-messages.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from '../guards/jwt-auth/jwt-auth.guard';
+import { PrivateMessage } from './entities/private-message.entity';
 import { PrivateMessagesController } from './private-messages.controller';
-import { PrivateMessagesRepository } from './private-messages.repository';
-import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
+import { PrivateMessagesService } from './private-messages.service';
 
 @Module({
-  providers: [PrivateMessagesService, PrivateMessagesRepository, JwtAuthGuard],
+  imports: [TypeOrmModule.forFeature([PrivateMessage])],
+  providers: [PrivateMessagesService, JwtAuthGuard],
   controllers: [PrivateMessagesController],
 })
 export class PrivateMessagesModule {}

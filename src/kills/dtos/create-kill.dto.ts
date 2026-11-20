@@ -1,11 +1,12 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class createKillDto {
   @IsNumber()
   matchId: number;
 
+  @IsOptional()
   @IsNumber()
-  playerId: number;
+  playerId?: number;
 
   @IsString()
   cardName: string;

@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
-import { QuestsService } from './quests.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from '../guards/jwt-auth/jwt-auth.guard';
+import { Quest } from './entities/quest.entity';
+import { UserQuest } from './entities/user-quest.entity';
 import { QuestsController } from './quests.controller';
-import { QuestsRepository } from './quests.repository';
-import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
+import { QuestsService } from './quests.service';
 
 @Module({
-  providers: [QuestsService, QuestsRepository, JwtAuthGuard],
+  imports: [TypeOrmModule.forFeature([Quest, UserQuest])],
+  providers: [QuestsService, JwtAuthGuard],
   controllers: [QuestsController],
 })
 export class QuestsModule {}

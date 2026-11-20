@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { NewsController } from './news.controller';
@@ -10,7 +11,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([News, NewsStatus])],
-  providers: [NewsService, NewsRepository, NewsStatusRepository, JwtAuthGuard],
+  providers: [AdminGuard, NewsService, NewsRepository, NewsStatusRepository, JwtAuthGuard],
   controllers: [NewsController],
 })
 export class NewsModule {}

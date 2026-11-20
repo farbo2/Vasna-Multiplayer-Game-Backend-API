@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import { Module } from '@nestjs/common';
 import { BattlePassService } from './battle-pass.service';
 import { BattlePassController } from './battle-pass.controller';
@@ -21,7 +22,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth/jwt-auth.guard';
       BattlePassInventory,
     ]),
   ],
-  providers: [
+  providers: [AdminGuard, 
     BattlePassService,
     BattlePassRepository,
     BattlePassProgressRepository,

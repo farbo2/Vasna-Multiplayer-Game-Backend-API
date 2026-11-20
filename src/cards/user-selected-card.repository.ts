@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { UserSelectedCard } from './entities/user-selected-card.entity';
 import { UserUnlockedCard } from './entities/user-unlocked-card.entity';
@@ -18,6 +18,9 @@ export class UserSelectedCardRepository extends Repository<UserSelectedCard> {
     const unlockedCard = await unlockedCardRepo.findOne({
       where: { id: cardId },
     });
+    if (!unlockedCard || unlockedCard.userId !== userId) {
+      throw new NotFoundException('Unlocked card not found for this user');
+    }
     const newSelectedCard = this.create({
       userId,
       card: unlockedCard,

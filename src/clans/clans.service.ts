@@ -1,11 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ClansRepository } from './clans.repository';
 import { ClanMemberRepository } from './clan-member.repository';
 import { ClanInvitationRepository } from './clan-invitation.repository';
@@ -22,15 +22,10 @@ import { createClanInvitationDto } from './dtos/create-clan-invitation.dto';
 export class ClansService {
   private readonly logger = new Logger(ClansService.name);
   constructor(
-    @InjectRepository(ClansRepository)
     private clansRepo: ClansRepository,
-    @InjectRepository(ClanMemberRepository)
     private clanMemberRepo: ClanMemberRepository,
-    @InjectRepository(ClanInvitationRepository)
     private clanInvitationRepo: ClanInvitationRepository,
-    @InjectRepository(ClanRequestRepository)
     private clanRequestRepo: ClanRequestRepository,
-    @InjectRepository(UsersRepository)
     private usersRepo: UsersRepository,
   ) {}
   async findAllClans() {
@@ -510,4 +505,144 @@ export class ClansService {
 
     return { message: 'Clan Invitation deleted successfully' };
   }
+  private async assertClanLeader(clanId: number, actorId: number) {
+    const clan = await this.clansRepo.findOne({ where: { id: clanId }, relations: ['leader'] });
+    if (!clan) throw new NotFoundException('Clan not found');
+    if (clan.leader.id !== actorId) throw new ForbiddenException('Only the clan leader can perform this action');
+    return clan;
+  }
+
+  async secureCreateClan(data: createClanDto, actorId: number) {
+    return this.createClan({ ...data, leaderId: actorId });
+  }
+
+  async secureUpdateClan(clanId: number, data: updateClanDto, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    return this.updateClan(clanId, data);
+  }
+
+  async secureDeleteClan(clanId: number, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    return this.deleteClan(clanId);
+  }
+
+  async secureAddMember(clanId: number, playerId: number, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    const existing = await this.clanMemberRepo.findOne({ where: { clan: { id: clanId }, playerId } });
+    if (existing) throw new BadRequestException('User is already a member of this clan');
+    return this.addMemberToClan(clanId, { playerId, role: 'Member' });
+  }
+
+  async secureUpdateMemberRole(clanId: number, memberId: number, role: string, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    if (!['normal', 'Member', 'Officer'].includes(role)) throw new BadRequestException('Invalid member role');
+    return this.updateMemberRole(clanId, memberId, role);
+  }
+
+  async secureRemoveMember(clanId: number, memberId: number, actorId: number) {
+    const clan = await this.clansRepo.findOne({ where: { id: clanId }, relations: ['leader', 'members'] });
+    if (!clan) throw new NotFoundException('Clan not found');
+    const member = clan.members.find((item) => item.id === memberId);
+    if (!member) throw new NotFoundException('Member not found');
+    if (clan.leader.id !== actorId && member.playerId !== actorId) throw new ForbiddenException();
+    if (member.playerId === clan.leader.id) throw new BadRequestException('The clan leader cannot leave the clan');
+    return this.removeMember(clanId, memberId);
+  }
+
+  async secureSendClanRequest(data: createClanRequestDto, actorId: number) {
+    const clan = await this.clansRepo.findOne({ where: { id: data.clanId }, relations: ['leader'] });
+    if (!clan) throw new NotFoundException('Clan not found');
+    const existingMember = await this.clanMemberRepo.findOne({ where: { clan: { id: data.clanId }, playerId: actorId } });
+    if (existingMember || clan.leader.id === actorId) throw new BadRequestException('Already a member of this clan');
+    const pending = await this.clanRequestRepo.findOne({ where: { clanId: data.clanId, player: { id: actorId }, status: 'Waiting' } });
+    if (pending) throw new BadRequestException('A pending request already exists');
+    return this.sendClanRequest({ ...data, playerId: actorId });
+  }
+
+  async secureDeleteClanRequest(requestId: number, actorId: number) {
+    const request = await this.clanRequestRepo.findOne({ where: { id: requestId }, relations: ['player'] });
+    if (!request) throw new NotFoundException('Clan request not found');
+    if (request.player.id !== actorId) throw new ForbiddenException();
+    return this.deleteClanRequest(requestId);
+  }
+
+  async secureResponseClanRequest(requestId: number, status: string, actorId: number) {
+    const request = await this.clanRequestRepo.findOne({ where: { id: requestId }, relations: ['player'] });
+    if (!request) throw new NotFoundException('Clan request not found');
+    await this.assertClanLeader(request.clanId, actorId);
+    if (!['Accepted', 'Declined'].includes(status)) throw new BadRequestException('Invalid request status');
+    if (status === 'Accepted') {
+      const member = await this.clanMemberRepo.findOne({ where: { clan: { id: request.clanId }, playerId: request.player.id } });
+      if (member) throw new BadRequestException('User is already a member of this clan');
+    }
+    return this.responseClanRequest(requestId, status);
+  }
+
+  async secureSendClanInvitation(data: createClanInvitationDto, actorId: number) {
+    await this.assertClanLeader(data.clanId, actorId);
+    const existing = await this.clanMemberRepo.findOne({ where: { clan: { id: data.clanId }, playerId: data.invitedId } });
+    if (existing) throw new BadRequestException('User is already a member of this clan');
+    const invitedUser = await this.usersRepo.findOne({ where: { id: data.invitedId } });
+    if (!invitedUser) throw new NotFoundException('Invited user not found');
+    return this.sendClanInvitation({ ...data, inviterId: actorId });
+  }
+
+  async secureResponseClanInvitation(invitationId: number, status: string, actorId: number) {
+    const invitation = await this.clanInvitationRepo.findOne({ where: { id: invitationId } });
+    if (!invitation) throw new NotFoundException('Clan invitation not found');
+    if (invitation.invitedPlayerId !== actorId) throw new ForbiddenException();
+    if (!['Accepted', 'Declined'].includes(status)) throw new BadRequestException('Invalid invitation status');
+    if (status === 'Accepted') {
+      const member = await this.clanMemberRepo.findOne({ where: { clan: { id: invitation.clanId }, playerId: actorId } });
+      if (member) throw new BadRequestException('Already a member of this clan');
+    }
+    return this.responseClanInvitation(invitationId, status);
+  }
+
+  async secureDeleteClanInvitation(invitationId: number, actorId: number) {
+    const invitation = await this.clanInvitationRepo.findOne({ where: { id: invitationId }, relations: ['inviter'] });
+    if (!invitation) throw new NotFoundException('Clan invitation not found');
+    if (invitation.inviter.id !== actorId && invitation.invitedPlayerId !== actorId) throw new ForbiddenException();
+    return this.deleteClanInvitation(invitationId);
+  }
+
+  async secureGetClanRequestsBySender(senderId: number, actorId: number) {
+    if (senderId !== actorId) throw new ForbiddenException();
+    return this.getAllClanRequestsBySenderId(senderId);
+  }
+
+  async secureGetClanRequestsByClan(clanId: number, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    return this.getAllClanRequestsByClanId(clanId);
+  }
+
+  async secureGetClanInvitationsByInviter(inviterId: number, actorId: number) {
+    if (inviterId !== actorId) throw new ForbiddenException();
+    return this.getAllClanInvitationsByInviterId(inviterId);
+  }
+
+  async secureGetClanInvitationsByInvited(invitedId: number, actorId: number) {
+    if (invitedId !== actorId) throw new ForbiddenException();
+    return this.getAllClanInvitationsByInvitedId(invitedId);
+  }
+
+  async secureGetClanInvitationsByClan(clanId: number, actorId: number) {
+    await this.assertClanLeader(clanId, actorId);
+    return this.getAllClanInvitationsByClanId(clanId);
+  }
+
+  async secureGetClanRequestById(id: number, actorId: number) {
+    const request = await this.clanRequestRepo.findOne({ where: { id }, relations: ['player'] });
+    if (!request) throw new NotFoundException('Clan request not found');
+    if (request.player.id !== actorId) await this.assertClanLeader(request.clanId, actorId);
+    return request;
+  }
+
+  async secureGetClanInvitationById(id: number, actorId: number) {
+    const invitation = await this.clanInvitationRepo.findOne({ where: { id }, relations: ['inviter'] });
+    if (!invitation) throw new NotFoundException('Clan invitation not found');
+    if (invitation.inviter.id !== actorId && invitation.invitedPlayerId !== actorId) throw new ForbiddenException();
+    return invitation;
+  }
+
 }

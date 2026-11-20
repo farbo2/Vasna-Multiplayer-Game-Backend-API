@@ -11,7 +11,7 @@ export class PrivateMessage {
   @Column()
   recieverId: number;
 
-  @Column()
+  @Column({ type: 'text' })
   message: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

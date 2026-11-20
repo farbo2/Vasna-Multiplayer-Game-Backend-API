@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { NewsRepository } from './news.repository';
 import { createNewsDto } from './dtos/create-news.dto';
 import { createNewsStatusDto } from './dtos/create-news-status.dto';
@@ -15,9 +14,7 @@ import { updateNewsStatusDto } from './dtos/update-news-status.dto';
 export class NewsService {
   private readonly logger = new Logger(NewsService.name);
   constructor(
-    @InjectRepository(NewsRepository)
     private newsRepo: NewsRepository,
-    @InjectRepository(NewsStatusRepository)
     private newsStatusRepo: NewsStatusRepository,
   ) {}
 

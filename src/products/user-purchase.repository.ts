@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { ProductCategory } from './entities/product-category.entity';
+import { DataSource, Repository } from 'typeorm';
 import { UserPurchase } from './entities/user-purchase.entity';
 
 @Injectable()
 export class UserPurchasesRepository extends Repository<UserPurchase> {
+  constructor(dataSource: DataSource) {
+    super(UserPurchase, dataSource.createEntityManager());
+  }
+
   async findAllUserPurchases(): Promise<UserPurchase[]> {
     return this.find();
   }

@@ -4,7 +4,6 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CardsRepository } from './cards.repository';
 import { UserSelectedCardRepository } from './user-selected-card.repository';
 import { UserUnlockedCardRepository } from './user-unlocked-card.repository';
@@ -16,11 +15,8 @@ import { UserUnlockedCard } from './entities/user-unlocked-card.entity';
 export class CardsService {
   private readonly logger = new Logger(CardsService.name);
   constructor(
-    @InjectRepository(CardsRepository)
     private cardsRepo: CardsRepository,
-    @InjectRepository(UserSelectedCardRepository)
     private userSelectedCardRepo: UserSelectedCardRepository,
-    @InjectRepository(UserUnlockedCardRepository)
     private userUnlockedCardRepo: UserUnlockedCardRepository,
   ) {}
 
@@ -134,6 +130,9 @@ export class CardsService {
     }
 
     // create new Record
+    const alreadyUnlocked = await this.userUnlockedCardRepo.findOne({ where: { userId, card: { id: cardId } } });
+    if (alreadyUnlocked) throw new NotFoundException('Card is already unlocked by this user');
+
     const unlockedCard = this.userUnlockedCardRepo.create({
       userId,
       card,
@@ -171,7 +170,9 @@ export class CardsService {
       );
     }
   }
-  async levelUpUnlockedCard(id: number): Promise<UserUnlockedCard> {
+  async levelUpUnlockedCard(id: number, userId: number): Promise<UserUnlockedCard> {
+    const unlockedCard = await this.userUnlockedCardRepo.findOne({ where: { id, userId } });
+    if (!unlockedCard) throw new NotFoundException('Unlocked card not found');
     return this.userUnlockedCardRepo.levelUpUnlockedCard(id);
   }
 
@@ -214,7 +215,9 @@ export class CardsService {
     }
   }
 
-  async unselectUnlockedCardById(cardId: number): Promise<void> {
+  async unselectUnlockedCardById(cardId: number, userId: number): Promise<void> {
+    const selectedCard = await this.userSelectedCardRepo.findOne({ where: { id: cardId, userId } });
+    if (!selectedCard) throw new NotFoundException('Selected card not found');
     await this.userSelectedCardRepo.unselectUnlockedCardById(cardId);
   }
 }

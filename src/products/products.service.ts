@@ -3,7 +3,6 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProductsRepository } from './products.repository';
 import { ProductCategoriesRepository } from './product-category.repository';
 import { UserPurchasesRepository } from './user-purchase.repository';
@@ -12,16 +11,14 @@ import { updateProductDto } from './dtos/update-product.dto';
 import { createProductCategoryDto } from './dtos/create-product-category.dto';
 import { updateProductCategoryDto } from './dtos/update-product-category.dto';
 import { createUserPurchaseDto } from './dtos/create-user-purchase.dto';
+import { updateUserPurchaseDto } from './dtos/update-user-purchase.dto';
 
 @Injectable()
 export class ProductsService {
   private readonly logger = new Logger(ProductsService.name);
   constructor(
-    @InjectRepository(ProductsRepository)
     private productsRepo: ProductsRepository,
-    @InjectRepository(ProductCategoriesRepository)
     private productCategoriesRepo: ProductCategoriesRepository,
-    @InjectRepository(UserPurchasesRepository)
     private userPurchasesRepo: UserPurchasesRepository,
   ) {}
 
@@ -94,12 +91,13 @@ export class ProductsService {
     }
   }
   async deleteProduct(productId: number) {
-    this.productsRepo.deleteProduct(productId);
+    await this.productsRepo.deleteProduct(productId);
+    return { message: 'Product deleted successfully' };
   }
 
   async updateProduct(productId: number, updateData: updateProductDto) {
-    this.productsRepo.updateProduct(productId, updateData);
-    return { message: 'Product Updated' };
+    await this.productsRepo.updateProduct(productId, updateData);
+    return { message: 'Product updated successfully' };
   }
 
   //Product Category Services
@@ -153,18 +151,19 @@ export class ProductsService {
     }
   }
   async deleteProductCategory(productCategoryId: number) {
-    this.productCategoriesRepo.deleteProductCategory(productCategoryId);
+    await this.productCategoriesRepo.deleteProductCategory(productCategoryId);
+    return { message: 'Product category deleted successfully' };
   }
 
   async updateProductCategory(
     productCategoryId: number,
     updateData: updateProductCategoryDto,
   ) {
-    this.productCategoriesRepo.updateProductCategory(
+    await this.productCategoriesRepo.updateProductCategory(
       productCategoryId,
       updateData,
     );
-    return { message: 'Product Category Updated' };
+    return { message: 'Product category updated successfully' };
   }
 
   //User Purchase Services
@@ -239,14 +238,15 @@ export class ProductsService {
     }
   }
   async deleteUserPurchase(userPurchaseId: number) {
-    this.userPurchasesRepo.deleteUserPurchase(userPurchaseId);
+    await this.userPurchasesRepo.deleteUserPurchase(userPurchaseId);
+    return { message: 'User purchase deleted successfully' };
   }
 
   async updateUserPurchase(
     userPurchaseId: number,
-    updateData: updateProductCategoryDto,
+    updateData: updateUserPurchaseDto,
   ) {
-    this.userPurchasesRepo.updateUserPurchase(userPurchaseId, updateData);
-    return { message: 'User Purchase Updated' };
+    await this.userPurchasesRepo.updateUserPurchase(userPurchaseId, updateData);
+    return { message: 'User purchase updated successfully' };
   }
 }

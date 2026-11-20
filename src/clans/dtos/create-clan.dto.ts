@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class createClanDto {
   @IsString()
@@ -11,6 +11,7 @@ export class createClanDto {
   @IsString()
   logo: string;
 
+  @IsOptional()
   @IsNumber()
-  leaderId: number;
+  leaderId?: number;
 }

@@ -1,11 +1,12 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class createMoveDto {
   @IsNumber()
   matchId: number;
 
+  @IsOptional()
   @IsNumber()
-  playerId: number;
+  playerId?: number;
 
   @IsString()
   moveType: string;

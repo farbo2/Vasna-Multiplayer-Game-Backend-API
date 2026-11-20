@@ -6,39 +6,52 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '../../auth/public.decorator';
+
+export interface AuthenticatedUser {
+  id: number;
+  role?: string;
+  [key: string]: unknown;
+}
+
+type AuthenticatedRequest = Request & { user?: AuthenticatedUser };
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService, private readonly reflector: Reflector) {}
 
-  canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<Request>();
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (context.getType() !== 'http') return true;
+
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (isPublic) return true;
+
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const token = this.extractTokenFromHeader(request);
-
-    if (!token) {
-      throw new UnauthorizedException('Token not provided');
-    }
+    if (!token) throw new UnauthorizedException('Bearer token is required');
 
     try {
-      const decodedToken = this.jwtService.verify(token);
-
-      const requestUserId =
-        request.body.userId || request.query.userId || request.params.id;
-      if (decodedToken !== requestUserId && decodedToken != 'admin') {
-        throw new UnauthorizedException('UserId mismatch');
+      const payload = await this.jwtService.verifyAsync<Record<string, unknown>>(token);
+      const rawId = payload.sub ?? payload.userId ?? payload.id;
+      const id = typeof rawId === 'number' ? rawId : Number(rawId);
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        throw new UnauthorizedException('Token does not contain a valid user identity');
       }
-
+      request.user = { ...payload, id, role: typeof payload.role === 'string' ? payload.role : undefined };
       return true;
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+    } catch {
+      throw new UnauthorizedException('Invalid or expired bearer token');
     }
   }
 
   private extractTokenFromHeader(request: Request): string | null {
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
-    }
-    return authHeader.split(' ')[1];
+    const header = request.headers.authorization;
+    if (!header?.startsWith('Bearer ')) return null;
+    const token = header.slice('Bearer '.length).trim();
+    return token || null;
   }
 }

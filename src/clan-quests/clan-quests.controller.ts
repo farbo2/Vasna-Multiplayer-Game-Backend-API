@@ -1,3 +1,4 @@
+import { AdminGuard } from '../guards/jwt-auth/admin.guard';
 import {
   Body,
   Controller,
@@ -6,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClanQuestsService } from './clan-quests.service';
 import { updateClanQuestDto } from './dtos/update-clan-quest.dto';
@@ -32,6 +34,7 @@ export class ClanQuestsController {
     }
     return this.clanQuestService.findClanQuestById(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/:id')
   updateClanQuestById(
@@ -44,6 +47,7 @@ export class ClanQuestsController {
     }
     return this.clanQuestService.updateClanQuest(numericId, body);
   }
+  @UseGuards(AdminGuard)
 
   @Delete('/:id')
   removeClanQuest(@Param('id') id: string) {
@@ -53,6 +57,7 @@ export class ClanQuestsController {
     }
     return this.clanQuestService.deleteClanQuest(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Post()
   createClanQuest(@Body() body: createClanQuestDto) {
@@ -77,6 +82,7 @@ export class ClanQuestsController {
     }
     return this.clanQuestService.findActiveClanQuestByClanId(numericId);
   }
+  @UseGuards(AdminGuard)
 
   @Patch('/:id')
   updateActiveCurrentClanQuestById(

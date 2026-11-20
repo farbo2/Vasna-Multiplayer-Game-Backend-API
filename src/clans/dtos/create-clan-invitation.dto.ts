@@ -4,8 +4,9 @@ export class createClanInvitationDto {
   @IsNumber()
   clanId: number;
 
+  @IsOptional()
   @IsNumber()
-  inviterId: number;
+  inviterId?: number;
 
   @IsNumber()
   invitedId: number;
